@@ -1,38 +1,39 @@
- const iframe = document.querySelector('iframe');
+"use strict"
+
+import throttle from 'lodash.throttle';
+
+const STORAGE_KEY = "videoplayer-current-time";
+
+const iframe = document.querySelector('iframe');
     const player = new Vimeo.Player(iframe);
 
-player.on('play', function () {
-        console.log('played the video!');
-    });
 
-    player.getVideoTitle().then(function(title) {
-        console.log('title:', title);
-    });
-    player.on('timeupdate', function(data) {
-      {
-        duration: 61.857
-        percent: 1
-        seconds: 61.857
-      }
-      console.log("timeupdate")
+player.on('timeupdate', throttle(getCurrentTime), 1000);
+
+ function getCurrentTime (data) {
+    
+   const currentTime = +data.seconds;
+        
+    console.log(currentTime);
+
+localStorage.setItem(STORAGE_KEY, currentTime);
       
-        const videoCurrentTime = event.currentTarget.value;
+};
 
+const saveCurrentTime = localStorage.getItem(STORAGE_KEY);
 
-        localStorage.setItem("videoplayer-current-time", videoCurrentTime);
-      
-});
+console.log(saveCurrentTime);
 
-player.setCurrentTime(30.456).then(function(seconds) {
-    // seconds = the actual time that the player seeked to
+player.setCurrentTime(saveCurrentTime).then(function (seconds) {
+    console.log(seconds);
+    
 }).catch(function(error) {
     switch (error.name) {
         case 'RangeError':
-            // the time was less than 0 or greater than the video’s duration
             break;
 
         default:
-            // some other error occurred
+            
             break;
     }
 });
