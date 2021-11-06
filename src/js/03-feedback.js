@@ -8,16 +8,11 @@ const inputEl = document.querySelector("input");
 
 const STORAGE_KEY = "feedback-form-state";
 
-const formData = {
-  
-};
-
 formEl.addEventListener('submit', onFormSubmit);
 formEl.addEventListener('input', throttle(saveDataEl, 500));
 
-saveInputMsg();
 
-
+let formData = {};
 
 function saveDataEl(event) {
   formData[event.target.name] = event.target.value;
@@ -30,25 +25,27 @@ function saveDataEl(event) {
 function onFormSubmit(event) {
   event.preventDefault();
   console.log(formData);
+ 
+  formData = {};
+
   event.currentTarget.reset();
   localStorage.removeItem(STORAGE_KEY);
 }
 
 
-function saveInputMsg() {
-  const saveMsg = localStorage.getItem(STORAGE_KEY);
-  if (saveMsg) { 
-   
-    const pasrsedSavedMsg = JSON.parse(saveMsg);
-    textareaEl.value = pasrsedSavedMsg.message;
+function saveFormData() {
+  const savedMsg = localStorage.getItem(STORAGE_KEY);
+  if (savedMsg) { 
+       const pasrsedSavedMsg = JSON.parse(savedMsg);
+
+    formData = pasrsedSavedMsg;
+      
     inputEl.value = pasrsedSavedMsg.email;
-
-    // const pasrsedSavedMsg = Object.values(JSON.parse(saveMsg));
-    // console.log(...pasrsedSavedMsg);
-
-    //  textareaEl.value = pasrsedSavedMsg[1];
-    // inputEl.value = pasrsedSavedMsg[0];
-    
-  };
+    textareaEl.value = pasrsedSavedMsg.message;
+  }; 
 }
 
+saveFormData();
+    
+    
+ 
