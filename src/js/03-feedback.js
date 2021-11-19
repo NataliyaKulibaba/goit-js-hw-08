@@ -12,7 +12,10 @@ formEl.addEventListener('submit', onFormSubmit);
 formEl.addEventListener('input', throttle(saveDataEl, 500));
 
 
-let formData = {};
+let formData = {
+  email: '',
+  message: '',
+};
 
 function saveDataEl(event) {
   formData[event.target.name] = event.target.value;
@@ -26,8 +29,11 @@ function onFormSubmit(event) {
   event.preventDefault();
   console.log(formData);
  
-  formData = {};
-
+  formData = {
+    email: '',
+  message: '',
+  };
+  
   event.currentTarget.reset();
   localStorage.removeItem(STORAGE_KEY);
 }
